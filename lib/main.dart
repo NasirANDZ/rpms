@@ -6,12 +6,17 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:provider/provider.dart';
 import 'provider/count_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
+import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
     await InAppWebViewController.setWebContentsDebuggingEnabled(true);
+  }
+  main(){
+    runApp(MyApp());
   }
 
   runApp(
@@ -28,14 +33,14 @@ Future main() async {
               useMaterial3: true,
             ),
             home: MyApp(),
-          ))
+          )
+      )
     //MaterialApp(home: MyApp())
   );
 }
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
-
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -83,6 +88,7 @@ class _MyAppState extends State<MyApp> {
     }
     webViewController?.loadUrl( urlRequest: URLRequest(url: WebUri(str)));
   }
+
   @override
   void initState() {
     super.initState();
@@ -113,7 +119,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      backgroundColor: const Color(0xFFEBEEFF),
       /*appBar: AppBar(title: const Text("Reena APP")),*/
+
       body: SafeArea(
         child: Column(children: <Widget>[
           /*TextField(
@@ -142,6 +150,13 @@ class _MyAppState extends State<MyApp> {
                     webViewController = controller;
                   },
                   onLoadStart: (controller, url) {
+                    //print("Nasir ${url}");
+                    Center( child: CircularProgressIndicator(),);
+                    // CircularProgressIndicator(
+                    //     value: 0,
+                    //     strokeWidth: 2,
+                    //     valueColor: AlwaysStoppedAnimation<Color>(Colors.green,)
+                    // );
                     // setState(() {urlController.text = url.toString();});
                   },
                   onPermissionRequest: (controller, request) async {
@@ -247,6 +262,7 @@ class _MyAppState extends State<MyApp> {
         ],
         ),
       ),
+
       bottomNavigationBar:  Consumer<CountProvider>(builder: (context, e, child) => Offstage(
         offstage: !e.convertFlag,
         child: BottomNavigationBar(
